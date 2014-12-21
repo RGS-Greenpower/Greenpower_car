@@ -52,7 +52,7 @@ void setup() {
   //SDnumber = EEPROM.readLong(0);
   File EEPROMsdr = SD.open("EEPROM.txt", FILE_READ);
   if (EEPROMsdr) {
-    while (EEPROMsdr.available() < 0) {
+    while (EEPROMsdr.available() > 0) {
       SDnumberString += EEPROMsdr.read();
     }
     EEPROMsdr.close();
@@ -106,7 +106,11 @@ void loop() {
     timer = millis() + 1000;
   }
   store = String(float(millis()) / 60000) + String(speed) + String(",") + String(current) + String(",") + String(av_current) + String(",") + String(voltage) + String(",") + String(battery_temp) + String(",") + String(motor_temp);
-  File dataFile = SD.open("data.csv", FILE_WRITE);
+  char filename_char[filename.length()];
+  
+  //open data file
+  filename.toCharArray(filename_char, filename.length());
+  File dataFile = SD.open(filename_char, FILE_WRITE);
   if (dataFile) {
     dataFile.println(store);
     dataFile.close();
